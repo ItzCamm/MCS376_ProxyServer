@@ -3,6 +3,28 @@
 /* You won't lose style points for including this long line in your code */
 static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
 
+/*handle the client HTTP transaction*/
+void doit(int connfd)
+{
+    int end_serverfd;/*the end server file descriptor*/
+
+    char buf[MAXLINE],method[MAXLINE],uri[MAXLINE],version[MAXLINE];
+    char endserver_http_header [MAXLINE];
+    /*store the request line arguments*/
+    char hostname[MAXLINE],path[MAXLINE];
+    int port;
+
+    rio_t rio,server_rio;/*rio is client's rio,server_rio is endserver's rio*/
+
+    Rio_readinitb(&rio,connfd);
+    Rio_readlineb(&rio,buf,MAXLINE);
+    sscanf(buf,"%s %s %s",method,uri,version); /*read the client request line*/
+
+    if(strcasecmp(method,"GET")){
+        printf("Proxy does not implement the method");
+        return;
+    }
+
 int main(int argc, char **argv) 
 {
     int listenfd, connfd;
@@ -28,28 +50,9 @@ int main(int argc, char **argv)
     }
 }
 
-/*handle the client HTTP transaction*/
-void doit(int connfd)
-{
-    int end_serverfd;/*the end server file descriptor*/
-
-    char buf[MAXLINE],method[MAXLINE],uri[MAXLINE],version[MAXLINE];
-    char endserver_http_header [MAXLINE];
-    /*store the request line arguments*/
-    char hostname[MAXLINE],path[MAXLINE];
-    int port;
-
-    rio_t rio,server_rio;/*rio is client's rio,server_rio is endserver's rio*/
-
-    Rio_readinitb(&rio,connfd);
-    Rio_readlineb(&rio,buf,MAXLINE);
-    sscanf(buf,"%s %s %s",method,uri,version); /*read the client request line*/
-
-    if(strcasecmp(method,"GET")){
-        printf("Proxy does not implement the method");
-        return;
-    }
     
+
+
     /*parse the uri to get hostname,file path ,port*/
     /*WRITE YOUR OWN*/
 
