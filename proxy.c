@@ -4,6 +4,7 @@
 static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
 
 /*handle the client HTTP transaction*/
+//testing
 void doit(int connfd)
 {
     int end_serverfd;/*the end server file descriptor*/
