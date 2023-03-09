@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include "csapp.h"
 
 /* You won't lose style points for including this long line in your code */
 static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:10.0.3) Gecko/20120305 Firefox/10.0.3\r\n";
 
-/*handle the client HTTP transaction*/
+
 void doit(int connfd)
 {
     int end_serverfd;/*the end server file descriptor*/
@@ -24,6 +25,31 @@ void doit(int connfd)
         printf("Proxy does not implement the method");
         return;
     }
+    
+    /*parse the uri to get hostname,file path ,port*/
+    /*WRITE YOUR OWN*/
+
+    /*build the http header which will send to the end server*/
+    /*WRITE YOUR OWN*/
+
+    /*connect to the end server*/
+    /*WRITE YOUR OWN*/
+
+    Rio_readinitb(&server_rio,end_serverfd);
+    /*write the http header to endserver*/
+    Rio_writen(end_serverfd,endserver_http_header,strlen(endserver_http_header));
+
+    /*receive message from end server and send to the client*/
+    size_t n;
+    while((n=Rio_readlineb(&server_rio,buf,MAXLINE))!=0)
+    {
+        printf("proxy received %zu/ bytes,then send\n",n); //%zu for size_t for size of obj
+        Rio_writen(connfd,buf,n);
+    }
+    Close(end_serverfd);
+}
+
+
 
 int main(int argc, char **argv) 
 {
@@ -48,30 +74,6 @@ int main(int argc, char **argv)
     doit(connfd);                                             //line:netp:tiny:doit
     Close(connfd);                                            //line:netp:tiny:close
     }
+
 }
-
-    
-
-
-    /*parse the uri to get hostname,file path ,port*/
-    /*WRITE YOUR OWN*/
-
-    /*build the http header which will send to the end server*/
-    /*WRITE YOUR OWN*/
-
-    /*connect to the end server*/
-    /*WRITE YOUR OWN*/
-
-    Rio_readinitb(&server_rio,end_serverfd);
-    /*write the http header to endserver*/
-    Rio_writen(end_serverfd,endserver_http_header,strlen(endserver_http_header));
-
-    /*receive message from end server and send to the client*/
-    size_t n;
-    while((n=Rio_readlineb(&server_rio,buf,MAXLINE))!=0)
-    {
-        printf("proxy received %d bytes,then send\n",n);
-        Rio_writen(connfd,buf,n);
-    }
-    Close(end_serverfd);
-}
+	
